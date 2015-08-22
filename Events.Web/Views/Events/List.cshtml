@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Events.Web.Models.EventViewModel>
+@{
+    ViewBag.Title = "Events";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@foreach (var eventi in Model)
+{
+
+    <div class="event-box">
+
+        <h2>@eventi.Title</h2>
+        <span class="date">@eventi.StartDateTime</span>
+        @if (eventi.Duration != null)
+        {
+            <span class="duration">(@eventi.Duration.Value.ToString(@"hh\:mm") hours)</span>
+        }
+        @if (eventi.ImageUrl != null)
+        {
+            <img src="@eventi.ImageUrl" width="200" height="200" />
+        }
+
+        <div id="event-details-@eventi.Id">
+            @Ajax.ActionLink("View Details ", "EventDetailsById", "Home",
+             new { id = eventi.Id },
+                new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "event-details-" + eventi.Id
+                }, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+@for (int i = 1; i <= ViewBag.Pages; i++)
+{
+    <a href="@Url.Action("List", new { id = i })">@i</a>
+}
